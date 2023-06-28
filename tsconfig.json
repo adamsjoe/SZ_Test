@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "ES6",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "strict": true,
+    "module": "CommonJS",
+    "noEmit": true,
+    "resolveJsonModule": true
+  },
+  "include": ["tests"]
+}
