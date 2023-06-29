@@ -419,6 +419,10 @@ When run, this test is marked as a ![#f03c15](https://via.placeholder.com/15/f03
 
 In the `sampleReport` directory you will see a basic HTML report showing what has passed and failed.
 
+The sample report can also be opened by using [this link](/sampleReport/index.html)
+
+I did consider adding in an allure test report which I am quite fond of, however this adds additional complexities (the need for a Java runtime chiefly) - so this lightweight report was used instead.
+
 ## Improvements
 
 As mentioned above some of the tests are quite large. This repo could benefit from a slight refactor to aid readability.
