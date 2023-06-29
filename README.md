@@ -1,24 +1,55 @@
-# Spotted Zebra Test
+# Spotted Zebra SDET Test
+
+## Contents
+
+[Introduction](#introduction)
+
+[Preamble](#preamble)
+
+[Installation](#installation)
+
+[Scripts](#scripts)
+
+[Axios](#axios)
+
+[Tests](#tests)
+
+[Roles Tests](#roles-tests)
+
+[Roles Test Data](#roles-test-data)
+
+[Soft Assertions](#soft-assertions)
+
+[Roles Tests Descriptions](#roles-test-descriptions)
+
+[Skills Tests](#skills-tests)
+
+[Skills Test Data](#skills-test-data)
+
+[Skills Tests Description](#skills-tests-description)
+
+[Test Report](#test-report)
+
+[Improvements](#improvements)
 
 ## Introduction
 
-This repo contains a very quick API test harness to check the GraphQL endpoint provided.
+This repo contains a very quick API test harness to check the GraphQL API endpoint provided.
 
-### Preamble
+## Preamble
 
 This harness makes use of [Playwright](https://playwright.dev/) as it will run on both Mac and Windows and is quite easy to use. All tests were written using [Axios](https://axios-http.com/). One exception is the sanity check, which uses a Playwright supplied Request method (which I didn't like, so switched to Axois.)
 
-#### Installation
+## Installation
 
-Requirements:
-NodeJS of at least version 18 is needed (this is enforced, so ensure that node is **_at least_** this version or the tests will not run.)
-To check the version of node use the command `node --version` at the command line.
+**Requirements:**
 
-Yarn is recommended as a package manager, but it is not a hard requirement - npm will do if yarn is not present (and both commands will be provided.)
+- NodeJS of at least version 18 is needed (this is enforced, so ensure that node is **_at least_** this version or the tests will not run.) To check the version of node use the command `node --version` at the command line.
+- Yarn is recommended as a package manager, but it is not a hard requirement - npm will do if yarn is not present (and both commands will be provided.)
 
-Once node is installed (and at the correct version):
+Once node is installed (and is at the correct version):
 
-- `run npm install` (or `yarn install`)
+- `run npm install` (_or_ `yarn install`)
 
 All required modules will be installed automatically.
 
@@ -29,7 +60,19 @@ or
 
 If you are connected to the internet and the GraphQL endpoint is up, you will see a message saying 1 Passed.
 
-### Axios
+### Scripts
+
+A number of scripts have been setup (again both commands will be given):
+
+| Script Command (NPM)   | Script Command (yarn) | Description                                                   |
+| ---------------------- | --------------------- | ------------------------------------------------------------- |
+| npm runScript allTests | yarn run allTests     | This command will run **all** tests, skills, roles and sanity |
+| npm runScript roles    | yarn run roles        | This command will run **only** the roles tests                |
+| npm runScript skills   | yarn run skills       | This command will run **only** the skills tests               |
+| npm runScript sanity   | yarn run sanity       | This command will run the single sanity test **only**         |
+| npm runScript report   | yarn run report       | This command will generate an HTML report                     |
+
+## Axios
 
 As mentioned, each test uses Axios to perform the request. At the moment, each file is laid out in, approximately, the same method (this could be improved on to reduce the amount of code reuse, but that is for the next iteration).
 
@@ -79,7 +122,7 @@ The body and options are then passed to the `.post` method and the results are s
 
 Each of the tests will use some form of the above query. As mentioned, an improvement could be to abstract this away and just pass in query and body and have this return the response object. This would cut down on code used and potentially improve readability.
 
-### Tests
+## Tests
 
 The approach taken was to concentrate on the two main entities, those being Roles and Skills. Each test has been configured to run in isolation from another test, if a test needs data it will create data. This approach has 2 main advantages:
 
@@ -115,7 +158,7 @@ This approach increases maintainability. Rather than having hard-coded test name
 
 It will be noted that `expect.soft` is being used when verifying the endpoints. Soft assertions, unlike normal assertions, will continue to the next line when they fail. This method can be risky, it could leave systems in unknown states, however on this occasion it was deemed acceptable to use this as it will provide more information on the report.
 
-### Tests
+### Roles Test Descriptions
 
 The roles suite consists of the following tests:
 
@@ -129,7 +172,7 @@ The roles suite consists of the following tests:
 - should allow a role to be updated
 - should NOT allow a role to be updated with an empty name
 
-### **should allow a role to be created**
+#### **should allow a role to be created**
 
 This test is a very basic test. We will attempt to create a new role from our list of predefined roles.
 
@@ -164,7 +207,7 @@ This test passed in the name (in this case "QA Engineer") and will check the fol
 
 When this test runs, we get a ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) `Pass`
 
-### **should NOT allow a role to be created if the role exists**
+#### **should NOT allow a role to be created if the role exists**
 
 This test will try to create a role using the same `createRole` mutation (again picking from the list of roles) and then immediately attempts to create the same role.
 
@@ -174,7 +217,7 @@ However, at it turns out, the API allows this - so my test is marked as ![#f03c1
 
 **_Note:_** this is an example of something I'd raise to product to get clarification on.
 
-### **should NOT allow a role to be created if there is no name**
+#### **should NOT allow a role to be created if there is no name**
 
 This test will try to create a new role with no role name. Again the specification does not say this is not allowed, but it seems logical.
 
@@ -182,7 +225,7 @@ The same `createRole` query is used, however this time our GraphQL variable will
 
 **_Note:_** this is an example of something I'd raise to product to get clarification on.
 
-## **should allow a role to be searched for by name**
+#### **should allow a role to be searched for by name**
 
 This test will create a role and then attempt to search for it. Again we use this approach to keep each test isolated and not dependent on any other test for data.
 
@@ -205,7 +248,7 @@ This query requires the name to be passed in (as a String) and then the followin
 
 When run, this test is a ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) `Pass`
 
-## **should allow a role to be searched for by id**
+#### **should allow a role to be searched for by id**
 
 This test is almost identical to the findRoleByName test. The difference is that this query uses the Id and not the role name.
 
@@ -226,7 +269,7 @@ As before, we create a role and store the id. This id is used when searching.
 
 When run, this test is a ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) `Pass`
 
-### **should allow a role to be deleted by id**
+#### **should allow a role to be deleted by id**
 
 This test will attempt to delete a role by using the id. As before, to keep with the Test Isolation Principle, we shall create the role we are trying to delete. We then run the `deleteRoleById` mutuation:
 
@@ -247,7 +290,7 @@ When run, this test is a ![#c5f015](https://via.placeholder.com/15/c5f015/000000
 
 **_Note:_** We could improve this test by searching for the id (or name) of the role we created and asserting that it was not found.
 
-### **should not allow a role to be deleted by id which does not exist**
+#### **should not allow a role to be deleted by id which does not exist**
 
 This test is almost identical to the previous delete by id, however with this test we do not need to create data - instead we pass in a very large id (99999) - in a production test we should get the max id and use +1 (or another number) to ensure we never accidentally use a real id, but for this proof of concept, using 99999 is ok.
 
@@ -256,7 +299,7 @@ This test is almost identical to the previous delete by id, however with this te
 
 When run, this test is a ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) `Pass`
 
-### **should allow a role to be updated**
+#### **should allow a role to be updated**
 
 For this test we will again create a role, and then try to update the role name (by using the same role name with the word 'updated' appended to it.)
 
@@ -270,7 +313,7 @@ We then:
 
 When run, this test is a ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) `Pass`
 
-### **should NOT allow a role to be updated with an empty name**
+#### **should NOT allow a role to be updated with an empty name**
 
 This is another test in which the behavior has not been defined. For me, using an empty name should throw some form of error - again I have just checked the response will contain the word error, however, the API seems to just return an update has been done, but not perform an update.
 
@@ -278,7 +321,7 @@ When run, this test is marked as a ![#f03c15](https://via.placeholder.com/15/f03
 
 **_Note:_** This is a very strange scenario. I would much rather see the API reject my attempt at updating with an empty name rather than just return the same data (but with an updatedAt changed.) Again, would be open to a discussion on this with a PO.
 
-### **should allow skills to be added to a role**
+#### **should allow skills to be added to a role**
 
 **This is a long test**
 
@@ -299,9 +342,9 @@ Within the data folder there is a file called `skills.ts` which contains the tes
 
 **_Note:_** In the data I have added \_JA to the skills. This is due to other users sometimes creating a skill which I would also use and then getting random failures.
 
-### Tests
+### Skills Tests Description
 
-### **should allow a skill to be created**
+#### **should allow a skill to be created**
 
 This is a basic test to ensure that a skill can be created.
 
@@ -327,13 +370,13 @@ And then:
 
 When run, this test is a ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) `Pass`
 
-### **should NOT allow a skill to be created which is already existing**
+#### **should NOT allow a skill to be created which is already existing**
 
 Again, we create the skill and then try to recreate it. We should get some form of error.
 
 When run, this test is a ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) `Pass`
 
-### **should allow a skill to be deleted**
+#### **should allow a skill to be deleted**
 
 - Verify status code is 200
 - Verify the affected count is 1
@@ -342,7 +385,7 @@ When run, this test is a ![#c5f015](https://via.placeholder.com/15/c5f015/000000
 
 **_Note:_** We could improve this test by searching for the id (or name) of the skill we created and asserting that it was not found.
 
-## **should allow a deleted skill to be recreated**
+#### **should allow a deleted skill to be recreated**
 
 This test highlights one of the issues in the _Observation_ section.
 
@@ -350,7 +393,7 @@ When a skill is deleted, we are unable to recreate that skill. This seems wrong.
 
 When run, this test is marked as a ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+)`Fail`
 
-### **should allow a skill to be updated**
+#### **should allow a skill to be updated**
 
 As with the roles test we create a skill, then update that skill name with the word "Updated" at the end.
 
@@ -364,7 +407,7 @@ We then:
 
 When run, this test is a ![#c5f015](https://via.placeholder.com/15/c5f015/000000?text=+) `Pass`
 
-### **should NOT allow a skill to be updated which does not exist**
+#### **should NOT allow a skill to be updated which does not exist**
 
 We pass in a large skill id here (one which does not exist) and then try to update it.
 
