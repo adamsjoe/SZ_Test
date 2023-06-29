@@ -1,5 +1,6 @@
+import axios from 'axios';
+
 import config from '../playwright.config';
-import axios, { AxiosRequestConfig } from 'axios';
 
 const endpoint = config.use?.baseURL ?? '';
 
@@ -23,6 +24,6 @@ export async function makeApiCall(body: { query: string; variables: { name: stri
       throw error;
     });
 
-  let returnObj = { actualRespose, actualStatus };
+  const returnObj = { actualRespose, actualStatus };
   return returnObj;
 }
