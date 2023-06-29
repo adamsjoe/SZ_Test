@@ -432,7 +432,38 @@ I did consider adding in an allure test report which I am quite fond of, however
 
 ## Improvements
 
-As mentioned above some of the tests are quite large. This repo could benefit from a slight refactor to aid readability.
+As mentioned above some of the tests are quite large. This repo could benefit from a slight refactor to aid readability. **_Update_**: To show how this would work, please look at the `experimental.spec.ts` file the `tests\roles` directory.
+
+The single test which is present is much shorter than others. For this, I abstracted the axios call out to thie `experimental.spec.ts` file. I added the options as a const within that file and again extracted the endpoint from the config file.
+
+The new `makeApiCall` function takes the body of the query as a parameter and returns an object with both the response code and the response text.
+
+```typescript
+test('should allow a role to be created (Experimental Method)', async ({}) => {
+  const roleName = 'superman';
+
+  const dateTime = new Date();
+  const today = dateTime.toISOString().split('T')[0];
+
+  // we can also find out what the largest Id is (this will vary depending on use)
+  const largestId = await getMaximumId();
+
+  const body = {
+    query: createRole,
+    variables: { name: roleName }
+  };
+
+  // call our new makiApiCall function and get the reply
+  let apiResponse = await makeApiCall(body);
+
+  expect.soft(apiResponse.actualStatus, `Verify status code is 200`).toBe(200);
+  expect.soft(apiResponse.actualRespose.data.RoleCreateOne.createdAt, `Verify createdAt contains today's date`).toContain(today);
+  expect.soft(apiResponse.actualRespose.data.RoleCreateOne.name, `Verify the name field has the correct roleName ${roleName}`).toBe(roleName);
+  expect.soft(apiResponse.actualRespose.data.RoleCreateOne.id, `Verify the new id is greater than ${largestId}`).toBeGreaterThan(largestId);
+});
+```
+
+This greatly reduces the amount of code written and improves readability. Only one test has been converted to this new format for now.
 
 It would also benefit from a chat with a PO to ensure that assumptions made are correct.
 
