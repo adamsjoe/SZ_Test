@@ -111,6 +111,10 @@ export const jobRoles = [
 
 This approach increases maintainability. Rather than having hard-coded test names, the data is located centrally and is easily updatable.
 
+#### Soft Assertions
+
+It will be noted that `expect.soft` is being used when verifying the endpoints. Soft assertions, unlike normal assertions, will continue to the next line when they fail. This method can be risky, it could leave systems in unknown states, however on this occasion it was deemed acceptable to use this as it will provide more information on the report.
+
 ### Tests
 
 The roles suite consists of the following tests:
@@ -368,10 +372,17 @@ Again this seems logical to me, and we look for the word "error" in the return, 
 
 When run, this test is marked as a ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+)`Fail`
 
+## Test Report
+
+In the `sampleReport` directory you will see a basic HTML report showing what has passed and failed.
+
 ## Improvements
 
 As mentioned above some of the tests are quite large. This repo could benefit from a slight refactor to aid readability.
+
 It would also benefit from a chat with a PO to ensure that assumptions made are correct.
+
+More additional testing could be done with negative scenarios (for example searching by id but passing in a String value. The aim here would be to ensure that informative error messages are being provided.)
 
 ## Observations
 
