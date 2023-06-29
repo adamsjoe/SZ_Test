@@ -82,7 +82,7 @@ Each test has a constant endpoint defined
 const endpoint = config.use?.baseUrl ?? '';
 ```
 
-This retrieves the baseUrl from the playwrightconfig file and assigns it. We use the Null coalescing operator to ensure we always have a value (even if that vale is an empty string.)
+This retrieves the baseUrl from the `playwright.config.ts` file and assigns it. We use the Null coalescing operator to ensure we always have a value (even if that vale is an empty string.)
 
 We then have an options const:
 
