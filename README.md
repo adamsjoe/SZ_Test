@@ -344,6 +344,15 @@ Within the data folder there is a file called `skills.ts` which contains the tes
 
 ### Skills Tests Description
 
+The skills suite contains the following tests:
+
+- should allow a skill to be created
+- should NOT allow a skill to be created which is already existing
+- should allow a skill to be deleted
+- should allow a deleted skill to be recreated
+- should allow a skill to be updated
+- should NOT allow a skill to be updated which does not exist
+
 #### **should allow a skill to be created**
 
 This is a basic test to ensure that a skill can be created.
@@ -440,3 +449,18 @@ More additional testing could be done with negative scenarios (for example searc
 **Deleted Skills** When a skill is deleted, a new skill **cannot** be added with the same name. The error message is not helpful, so this is not useful in two ways.
 
 **Updating a non-existing skill** If we try to update a non-existing skill, the skill is created. This is unexpected behavior.
+
+## Issues to raise
+
+If this were a 'real' project, the following issues would be raised in the issue tracking system of choice
+
+(Severities will come from the included strategy document)
+
+| Issue                                      | Description                                                                                                                                                                                                   | Severity     |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `createdAt` and `updatedAt` time incorrect | As mentioned above the times are out by 1 hour. This could lead to incorrect data being used (or generated) in later systems.                                                                                 | **NORMAL**   |
+| Can create duplicate roles                 | Being able to create duplicate rows will cause issues later on. This could lead to an impact on customer usage (but not enough to warrant blocker status)                                                     | **CRITICAL** |
+| deletedAt is never populated               | The deletedAt field is never populated (that can be seen with the API) - it will have no impact on a customer usage                                                                                           | **TRIVIAL**  |
+| Error message for duplicate skills         | While it is correct that the skills can't be duplicated, a more helpful error would be needed. I am on the line between NORMAL and CRITICAL, but as a user will never see the message, keeping this as NORMAL | **NORMAL**   |
+| Unable to recreate skills                  | This would cause impact on the end user.                                                                                                                                                                      | **BLOCKER**  |
+| Empty role names                           | Allowing empty role names could be problematic further down the line                                                                                                                                          | **CRITICAL** |
