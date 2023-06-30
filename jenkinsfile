@@ -1,5 +1,5 @@
 pipeline {
-    ageny any
+    agent any
 
     parameters {
         string(defaultValue: 'main', description: '', name: 'branch')
