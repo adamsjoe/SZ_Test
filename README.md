@@ -32,6 +32,8 @@
 
 [Improvements](#improvements)
 
+[Issues To Raise](#issues-to-raise)
+
 ## Introduction
 
 This repo contains a very quick API test harness to check the GraphQL API endpoint provided.
