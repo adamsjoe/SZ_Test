@@ -6,6 +6,10 @@
 
 [Preamble](#preamble)
 
+[Deliverables](#deliverables)
+
+[Jenkins](#jenkins)
+
 [Installation](#installation)
 
 [Scripts](#scripts)
@@ -41,6 +45,31 @@ This repo contains a very quick API test harness to check the GraphQL API endpoi
 ## Preamble
 
 This harness makes use of [Playwright](https://playwright.dev/) as it will run on both Mac and Windows and is quite easy to use. All tests were written using [Axios](https://axios-http.com/). One exception is the sanity check, which uses a Playwright supplied Request method (which I didn't like, so switched to Axois.)
+
+### Deliverables
+
+The Assignment asked for the following deliverables:
+
+- **Instructions on how to execute the test suite (preferably from the command line)** These are contained within this file
+- **Source code of the test suite** Contained within this repo (especially the `tests` directory)
+- **Links to binaries** Not required due to NPM
+- **Report from previous execution** Which is contained in the `sampleReports` directory
+
+### Jenkins
+
+I have gone a little further and spun up a Jenkins instance on my AWS account. This can be accessed via:
+
+**URL** http://13.40.50.189:8080/
+
+**Username** sz_user
+
+**Password** sz_user
+
+This is a small extra, whch would form part of any strategy where we could run tests on any build (or as part of a schedule) to try to catch issues or regressions as early as possible.
+
+There will be a job called **Spotted Zebra SDET** which is a pipeline job, which is configured in the `Jenkinsfile` in the root of this repo. The reports will also be published at a job level when the tests are run. The user provided has login and run permissions, and you can see a few runs have already been performed. The results will differ (due to the bugs in the skills endpoint, but if you are running on an API which has been reset, the results should be the same as the ones in the sampleReport.
+
+**_Note:_** Normally, login details would not be provided in this readme, this is a huge security issue - but the risk is negligable here (no other jobs on this instance, and the instance will be powered down in a few days.)
 
 ## Installation
 
@@ -497,3 +526,136 @@ If this were a 'real' project, the following issues would be raised in the issue
 | Error message for duplicate skills         | While it is correct that the skills can't be duplicated, a more helpful error would be needed. I am on the line between NORMAL and CRITICAL, but as a user will never see the message, keeping this as NORMAL | **NORMAL**   |
 | Unable to recreate skills                  | This would cause impact on the end user.                                                                                                                                                                      | **BLOCKER**  |
 | Empty role names                           | Allowing empty role names could be problematic further down the line                                                                                                                                          | **CRITICAL** |
+| Role Ids are not sequential                | Role Ids sometimes seem to "skip" numbers - this would need raised an investigated, was difficult to detect when numerous people using the same endpoint uncontrolled (see below)                             | **NORMAL**   |
+
+### Role Id issue
+
+After running the tests, I ran the following query:
+
+```gql
+query listRoles {
+  Roles {
+    id
+    name
+    skills {
+      skillId
+      createdAt
+      weight
+      id
+    }
+  }
+}
+```
+
+and got the following output
+
+```json
+{
+  "data": {
+    "Roles": [
+      {
+        "id": 1617,
+        "name": "superman",
+        "skills": []
+      },
+      {
+        "id": 1618,
+        "name": "QA Engineer",
+        "skills": []
+      },
+      {
+        "id": 1619,
+        "name": "UX Designer",
+        "skills": []
+      },
+      {
+        "id": 1620,
+        "name": "UX Designer",
+        "skills": []
+      },
+      {
+        "id": 1622,
+        "name": "UX Designer",
+        "skills": []
+      },
+      {
+        "id": 1623,
+        "name": "UX Designer",
+        "skills": []
+      },
+      {
+        "id": 1624,
+        "name": "UX Designer",
+        "skills": []
+      },
+      {
+        "id": 1625,
+        "name": "UX Designer",
+        "skills": []
+      },
+      {
+        "id": 1626,
+        "name": "",
+        "skills": []
+      },
+      {
+        "id": 1627,
+        "name": "",
+        "skills": []
+      },
+      {
+        "id": 1628,
+        "name": "",
+        "skills": []
+      },
+      {
+        "id": 1629,
+        "name": "React Developer",
+        "skills": []
+      },
+      {
+        "id": 1630,
+        "name": "Java Developer",
+        "skills": []
+      },
+      {
+        "id": 1632,
+        "name": "iOS Developer updated",
+        "skills": []
+      },
+      {
+        "id": 1633,
+        "name": "",
+        "skills": []
+      },
+      {
+        "id": 1634,
+        "name": "",
+        "skills": []
+      },
+      {
+        "id": 1635,
+        "name": "",
+        "skills": []
+      },
+      {
+        "id": 1636,
+        "name": "Android Developer",
+        "skills": []
+      },
+      {
+        "id": 1637,
+        "name": "Android Developer",
+        "skills": []
+      },
+      {
+        "id": 1638,
+        "name": "Android Developer",
+        "skills": []
+      }
+    ]
+  }
+}
+```
+
+**Note** that id **1631** is missing. Prior to this I noticed the Id skipped around 10 id numbers. It was noticed at first as other roles were appearing (other people undertaking the assignment) but this is something to investigate (would need Database access) - I would still raise this as an issue (above) and put it as a **NORMAL** severity (which could be upgraded, depending on the outcome of the investigation)
