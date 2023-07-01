@@ -1,14 +1,10 @@
 pipeline {
     agent any
 
-    parameters {
-        string(defaultValue: 'main', description: '', name: 'branch')
-    }
-
     stages {
         stage('Checkout code') {
             steps {
-                git branch: params.branch,
+                git branch: 'main',
                 credentialsId: 'GutHub',
                 url: 'https://github.com/adamsjoe/SZ_Test.git'
             }
