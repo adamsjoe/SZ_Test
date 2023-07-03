@@ -463,9 +463,11 @@ I did consider adding in an allure test report which I am quite fond of, however
 
 ## Improvements
 
-As mentioned above some of the tests are quite large. This repo could benefit from a slight refactor to aid readability. **_Update_**: To show how this would work, please look at the `experimental.spec.ts` file the `tests\roles` directory.
+As mentioned above some of the tests are quite large. This repo could benefit from a slight refactor to aid readability. 
 
-The single test which is present is much shorter than others. For this, I abstracted the axios call out to thie `experimental.spec.ts` file. I added the options as a const within that file and again extracted the endpoint from the config file.
+**_Update_**: To show how this would work, please look at the `experimental.spec.ts` file the `tests\roles` directory.
+
+The single test which is present is much shorter than others.  I have redone the createRole test using this ne method. For this new method, I abstracted the axios call out to thie `apiRequest.ts` file. I added the options as a const within that file and again extracted the endpoint from the config file.
 
 The new `makeApiCall` function takes the body of the query as a parameter and returns an object with both the response code and the response text.
 
@@ -496,7 +498,7 @@ test('should allow a role to be created (Experimental Method)', async ({}) => {
 
 This greatly reduces the amount of code written and improves readability. Only one test has been converted to this new format for now.
 
-It would also benefit from a chat with a PO to ensure that assumptions made are correct.
+The tests would also benefit from a chat with a PO to ensure that assumptions made are correct (role names could never duplicate, what is weight, what are the rules around weight).
 
 More additional testing could be done with negative scenarios (for example searching by id but passing in a String value. The aim here would be to ensure that informative error messages are being provided.)
 
